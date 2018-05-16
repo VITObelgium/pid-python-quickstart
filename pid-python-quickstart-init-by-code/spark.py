@@ -17,7 +17,7 @@ to be executed in parallel.
 """
 if __name__ == '__main__':
     """
-    Initialize the logging system ( which is by default a simple console logger ) and flush the initial log
+    Initialize the logging system with kafka configuration and flush the initial log
     """
     kafka_system=KafkaLogging(brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668",topic='pid_test2_es' )
     process_log = logging_factory.LoggingFactory(classes=[kafka_system]).get_logger("-","HISTOGRAM",datetime.now())
