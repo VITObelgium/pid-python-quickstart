@@ -14,7 +14,7 @@ def _ndvi_files(products):
 
     prefix = 'file:'
 
-    return [file.filename[len(prefix):]
+    return [{'file' : file.filename[len(prefix):], 'product_id': str(product), 'product_date': product.timestamp, 'product_type' : str(product.producttype), 'geometry' : product.geometry }
             for product in products
             for file in product.files
             if file.filename.startswith(prefix) and 'NDVI' in file.bands]

@@ -8,12 +8,19 @@ from operator import add
 from histogram.files import ndvi_files
 from histogram.histogram import histogram
 from pyspark import SparkContext
+from pidclient import logging_factory
 
 """
 The code in the __main__ block will be executed on a single node, the 'driver'. It describes the different steps that need
 to be executed in parallel.
 """
 if __name__ == '__main__':
+    """
+    Initialize the logging system ( which is by default a simple console logger ) and flush the initial log
+    """
+    process_log = logging_factory.LoggingFactory().get_logger("-","HISTOGRAM",datetime.now())
+    process_log.proc_started()
+    
     """
     Query the PROBA-V files that will be processed. This method returns a simple list of files that match a specific time range and bounding box.
     """
@@ -37,3 +44,5 @@ if __name__ == '__main__':
         print( "sum of %i histograms: %s" % (count, total) )
     finally:
         sc.stop()
+        """ complete the logs with the latest information, flush the logs and close the system."""
+        process_log.proc_stopped(0,"master has ended without issues")
