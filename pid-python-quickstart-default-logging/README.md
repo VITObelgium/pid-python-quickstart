@@ -26,5 +26,28 @@ The program should end with
 	
 that should ideally placed in a 'finally' statement.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
 
+The user can specify on which files he is using ( creation, deletion, use, .. ) with the instruction :
+
+	process_log.add_file("[file path]","[operation]","<type>","<Wkt geometry>", "<checksum>","<size>","<product_id>", "<ogc_urn>") 
+
+where only the file path (string) and the operation (string) are mandatory.
+
+More information can be set with 
+
+	process_log.pid_entry.job_desc = ..
+	process_log.pid_entry.job_type= = ..
+	process_log.pid_entry.proc_type = ..
+	process_log.pid_entry.parent_job_id  = ..
+	process_log.pid_entry.environment = .. 
+	
+	process_log.pid_entry.host = .. (defined by default but can be overridden)
+	process_log.pid_entry.host = .. (defined by default but can be overridden)
+		
+	process_log.pid_entry.product_id    = .. (defined at starting but can be overridden)
+	process_log.pid_entry.product_type  = .. (defined at starting but can be overridden)
+	process_log.pid_entry.product_date  = .. (defined at starting but can be overridden)
 
 
+
+	
+	
