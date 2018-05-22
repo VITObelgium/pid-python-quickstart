@@ -43,9 +43,9 @@ More information can be set with
 	process_log.pid_entry.host = .. (defined by default but can be overridden)
 	process_log.pid_entry.host = .. (defined by default but can be overridden)
 		
-	process_log.pid_entry.product_id    = .. (defined at starting but can be overridden)
-	process_log.pid_entry.product_type  = .. (defined at starting but can be overridden)
-	process_log.pid_entry.product_date  = .. (defined at starting but can be overridden)
+	process_log.pid_entry.product_id    = .. (defined by get_logger() but can be overridden)
+	process_log.pid_entry.product_type  = .. (defined by get_logger() but can be overridden)
+	process_log.pid_entry.product_date  = .. (defined by get_logger() but can be overridden)
 
 
 
