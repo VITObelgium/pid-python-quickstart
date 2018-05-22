@@ -1,4 +1,5 @@
 #!/bin/sh
 
-spark-submit --master local[*] --conf spark.driver.bindAddress=127.0.0.1 --conf spark.eventLog.enabled=false spark.py
+export main.logger = kafka
+spark-submit --conf spark.yarn.executorEnv.pidclient.main.logger=kafka --conf spark.yarn.executorEnv.pidclient.kafka.topic=pid_test2_es --conf spark.yarn.executorEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"  --master local[*] --conf spark.driver.bindAddress=127.0.0.1 --conf spark.eventLog.enabled=false spark.py
 
