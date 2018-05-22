@@ -13,9 +13,9 @@ The following imports must be added in the initial program.
 
 The following other imports can also be used :
 
-	file : from pidclient.pid_logging.file_log import FileLogging
-	console : from pidclient.pid_logging.console_log import ConsoleLogging
-	elasticsearch : from pidclient.pid_logging.elasticsearch_log import ElasticsearchLogging
+	from pidclient.pid_logging.file_log import FileLogging
+	from pidclient.pid_logging.console_log import ConsoleLogging
+	from pidclient.pid_logging.elasticsearch_log import ElasticsearchLogging
 
 As very first lines of the code, the following code should be inserted :
 
@@ -26,7 +26,7 @@ The first line initialize the kafka logging object with the required information
 
 	file_system=FileLogging(filename="/tmp/log.txt")
 	console_system=ConsoleLogging()
-	elasticsearch_system=ElasticsearchLogging(hosts="es1.vgt.vito.be",index="index",type="product")
+	elasticsearch_system=ElasticsearchLogging(hosts="http://es1.vgt.vito.be:9200",index="index",type="product")
 
 The second line initializes the system and indicates that a product of type 
 <product_type> with the reference <product_id> and the creation date <product_date> shall be created.  The newly instanciated KafkaLogging logging object has been placed in the array of DataStore facilities to use through the "classes" parameter.
