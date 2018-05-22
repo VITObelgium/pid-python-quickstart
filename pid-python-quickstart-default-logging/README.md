@@ -4,6 +4,8 @@ In order to use the Processing Information DataStore facility, some python instr
 
 Indeed, all the drivers and the executors create their own communication layer, and independently push their information to the DataStore facility.
 
+Without any specific directive, the logging information is printed in the console.
+
 # Required adaptation
 
 The following import must be added in the initial program.
