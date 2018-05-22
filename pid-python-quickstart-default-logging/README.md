@@ -26,11 +26,11 @@ The program should end with
 	
 that should ideally placed in a 'finally' statement.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
 
-The user can specify on which files he is using ( creation, deletion, use, .. ) with the instruction :
+The user can specify which files he is using ( creation, deletion, use, .. ) with the instruction :
 
 	process_log.add_file("[file path]","[operation]","<type>","<Wkt geometry>", "<checksum>","<size>","<product_id>", "<ogc_urn>") 
 
-where only the file path (string) and the operation (string) are mandatory.
+where only the file path (string) and the operation (string) are mandatory.  The call to add_file can be executed several times to specify that the system has used/created/deleted/... many files. 
 
 More information can be set with 
 
