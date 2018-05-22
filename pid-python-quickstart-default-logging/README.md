@@ -1,6 +1,6 @@
 In order to use the Processing Information DataStore facility, some python instructions must be added in :
-- the python driver program
-- the python executor program
+- the python driver program (see spark.py)
+- the python executor program (see histogram/histogram.py)
 
 Indeed, all the drivers and the executors create their own communication layer, and independently push their information to the DataStore facility.
 
