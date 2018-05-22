@@ -19,7 +19,6 @@ The following environment variables can be used as directive for the Processing 
 	pidclient.elasticsearch.index = <elasticsearch index to use>
 	pidclient.elasticsearch.type = <elasticsearch type to use>
 	
-	_system=ElasticsearchLogging(hosts="http://es1.vgt.vito.be:9200",index="index",type="product")
 Neverthless, for system architecture reason, they can not be simply set through the use of regular bash instruction such as 
 
 	<env variable>=<value> 
