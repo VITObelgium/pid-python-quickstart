@@ -17,14 +17,14 @@ As very first line of the code, the following code should be inserted :
 
 The first line initialise the system and indicates that a product of type 
 <product_type> with the reference <product_id> and the creation date <product_date> shall be created.  No specific logging directorive are provided.
-The second line asks to register the initial information in the DataStore facility
+The second line asks to register the initial information in the DataStore facility.
 Specific logging information can be added between those 2 lines, by adapting the content of the process_log object.
 
 The program should end with 
 
 	process_log.proc_stopped(<exit code>,"<exit message>")
 	
-It should ideally placed in a 'finally' statement.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
+that should ideally placed in a 'finally' statement.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
 
 
 
