@@ -11,7 +11,7 @@ In this example, additional information has been added to give information on ho
 ## generalities
 The following environment variables can be used as directive for the Processing Information DataStore facility :
 
-	pidclient.loggers=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
+	pidclient.main.logger=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
 	pidclient.kafka.brokers=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
 	pidclient.kafka.topic= <kafka topic queue to use>
 	pidclient.file.filename = <list of comma separated filenames to use for logging>	
@@ -33,7 +33,7 @@ In order to fix the environment variables required to fix the DataStore facility
 
 Example :
 
-	--conf spark.yarn.executorEnv.pidclient.loggers=kafka 
+	--conf spark.yarn.executorEnv.pidclient.main.logger=kafka 
 	--conf spark.yarn.executorEnv.pidclient.kafka.topic=pid_test2_es 
 	--conf spark.yarn.executorEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"  
 
@@ -45,9 +45,9 @@ In order to fix the environment variables required to fix the DataStore facility
 	
 Example :
 
-	--conf spark.executorEnv.pidclient.loggers=kafka 
+	--conf spark.executorEnv.pidclient.main.logger=kafka 
 	--conf spark.executorEnv.pidclient.kafka.topic=pid_test2_es --conf spark.executorEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668" 
-	--conf spark.yarn.appMasterEnv.pidclient.loggers=kafka 
+	--conf spark.yarn.appMasterEnv.pidclient.main.logger=kafka 
 	--conf spark.yarn.appMasterEnv.pidclient.kafka.topic=pid_test2_es 
 	--conf spark.yarn.appMasterEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"
 

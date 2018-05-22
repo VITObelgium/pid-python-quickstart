@@ -8,7 +8,8 @@ In this example, additional information has been added to give information on ho
 
 The following configuration template can be used to setup the system
 
-	loggers=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
+	[main]
+	logger=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
 	[kafka]	
 	brokers=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
 	topic= <kafka topic queue to use>
@@ -23,7 +24,8 @@ The following configuration template can be used to setup the system
 
 Example : file /data/users/Private/MyOwnUSER/pid.conf
 
-	loggers=kafka,console,file,elasticsearch
+	[main]
+	logger=kafka,console,file,elasticsearch
 	[kafka]	
 	brokers=epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668
 	topic=pid_test2_es
