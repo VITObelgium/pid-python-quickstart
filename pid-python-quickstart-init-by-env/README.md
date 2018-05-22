@@ -1,44 +1,79 @@
-This code sample shows how to use Spark (http://spark.apache.org/) for distributed processing on the PROBA-V Mission Exploitation Platform. (https://proba-v-mep.esa.int/)
-The sample intentionally implements a very simple computation:
-for each PROBA-V tile in a given bounding box and time range, a histogram is computed. The results are then summed and printed. Computation of the histograms runs in parallel.
+In order to use the Processing Information DataStore facility, some python instructions must be added in :
+- the python driver program (see spark.py)
+- the python executor program (see histogram/histogram.py)
 
-# Development environment setup
+In this example, additional information has been added to give information on how and where to log information.  That specific information has been added through the setting of environment variables in the different starting scripts :
+- run-cluster.sh
+- run-local.sh
+- ..
 
-PyCharm integration: http://stackoverflow.com/a/34714207/1158374
+# Required script adaptation
+## generalities
+The following environment variables can be used as directive for the Processing Information DataStore facility :
 
-Note: at least PyCharm Community Edition 2016.2.3 requires that you expand `SPARK_HOME` yourself, so `PYTHONPATH` becomes:
+	pidclient.loggers=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
+	pidclient.kafka.brokers=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
+	pidclient.kafka.topic= <kafka topic queue to use>
+	pidclient.file.filename = <list of comma separated filenames to use for logging>	
+	pidclient.elasticsearch.hosts =<list of comma separated urls of elasticsearch servers>
+	pidclient.elasticsearch.index = <elasticsearch index to use>
+	pidclient.elasticsearch.type = <elasticsearch type to use>
+	
+	_system=ElasticsearchLogging(hosts="http://es1.vgt.vito.be:9200",index="index",type="product")
+Neverthless, for system architecture reason, they can not be simply set through the use of regular bash instruction such as 
 
-`/path/to/the/spark/directory/python:/path/to/the/spark/directory/python/lib/py4j-some-version.src.zip`
+	<env variable>=<value> 
 
-# Running the code
-## Locally
-Run the `spark.py` script directly in your development environment. This allows for debugging your script.
-Run the `run-local` bash script on the command line for a local test run.
+they have to be set as configuration directive of the spark-submit command
 
-Both methods will use the local cpu's of your system. 
-## On the Hadoop cluster
-### Log into Hadoop
-Run `kinit` and provide your MEP password. (Same as VM/portal.)
 
-### Submit your job on Hadoop
-Run the `run-cluster` script. It will package your project and submit it to the Hadoop cluster.
+## run-local
+In order to fix the environment variables required to fix the DataStore facility to use, on have to use the following directive of the spark-submit command :
 
-Inside this script, you can adjust options such as `--num-executors` to specify the number of parallel executors to use.
+	--conf spark.yarn.executorEnv.<env variable>=<value>
 
-Additional Python dependencies as `.zip`, `.egg` or `.py` files can be appended to the `--py-files` argument.
+Example :
 
-### View job logs Hadoop
-As your job now runs on remote servers, the output generated there is not directly visible. You can retrieve the full logs like this:
+	--conf spark.yarn.executorEnv.pidclient.loggers=kafka 
+	--conf spark.yarn.executorEnv.pidclient.kafka.topic=pid_test2_es 
+	--conf spark.yarn.executorEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"  
 
-Find the application ID: it is printed in the console output of the Spark job, for example `application_1484394506558_0055`. Then run:
-`yarn logs  -log_files_pattern std.*  -applicationId application_1484394506558_0055`
+## run-cluster
+In order to fix the environment variables required to fix the DataStore facility to use, on have to use the following directive of the spark-submit commands :
 
-### Using the Spark UI to inspect the running job
-Use X2Go Client to start a remote desktop session with your VM; run Firefox and navigate to the job's tracking URL printed in
-Spark's console output, e.g:
-[http://epod6.vgt.vito.be:8088/proxy/application_1484394506558_0055](http://epod6.vgt.vito.be:8088/proxy/application_1484394506558_0055).
+	for Executor : --conf spark.executorEnv.<env variable>=<value>
+	for Driver : --conf spark.yarn.appMasterEnv.<env variable>=<value>
+	
+Example :
 
-An overview of the jobs submitted to the cluster is available at
-[http://epod6.vgt.vito.be:8088/cluster](http://epod6.vgt.vito.be:8088/cluster).
+	--conf spark.executorEnv.pidclient.loggers=kafka 
+	--conf spark.executorEnv.pidclient.kafka.topic=pid_test2_es --conf spark.executorEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668" 
+	--conf spark.yarn.appMasterEnv.pidclient.loggers=kafka 
+	--conf spark.yarn.appMasterEnv.pidclient.kafka.topic=pid_test2_es 
+	--conf spark.yarn.appMasterEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"
+
+
+# Required code adaptation
+
+The following import must be added in the initial program.
+
+	from pidclient import logging_factory
+	
+As very first lines of the code, the following code should be inserted :
+
+	process_log = logging_factory.LoggingFactory().get_logger("<product_id>","<product_type>","<product_date>")
+    process_log.proc_started()
+
+The first line initializes the system and indicates that a product of type 
+<product_type> with the reference <product_id> and the creation date <product_date> shall be created.  No specific logging directive are provided.
+The second line asks to register the initial information in the DataStore facility.
+Specific logging information can be added between those 2 lines, by adapting the content of the process_log object.
+
+The program should end with 
+
+	process_log.proc_stopped(<exit code>,"<exit message>")
+	
+that should ideally placed in a 'finally' statement.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
+
 
 
