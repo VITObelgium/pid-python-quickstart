@@ -63,9 +63,11 @@ t2.set_upstream(t1)
 t3.set_upstream(t1)
 
 def print_driver(self, process_log):
-    process_log.pid_entry.job_desc="Driver Adapted"
+    process_log.pid_entry.job_desc="Airflow Workflow Adapted"
+    return None
 
 def print_steps(self, process_log):
-    process_log.pid_entry.job_desc="Step adapted"
+    process_log.pid_entry.job_desc="Airflow Step adapted"
+    return None
 
 log_steps(log_driver(dag,print_driver,print_driver),print_steps,print_steps)

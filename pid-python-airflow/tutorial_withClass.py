@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 from pidclient import logging_factory
 from pidclient.airflow_utils import DAGWithLogging
 from airflow.utils.decorators import apply_defaults
-from pidclient.airflow_utils import log_driver, log_steps 
 import types
 
 default_args = {
@@ -30,13 +29,16 @@ default_args = {
 def print_world():
     print('world')
     
+    
 class DAGWithExtLogging(DAGWithLogging):
     def proc_started(self, process_log):
-        process_log.pid_entry.job_desc="process Adapted"
+        process_log.pid_entry.job_desc="Airflow process Adapted"
+        return None
         
         
     def proc_stopped(self, process_log):
         process_log.pid_entry.job_type="airflow"
+        return None
         
 dag = DAGWithExtLogging(
     'tutorial_with_class', default_args=default_args, schedule_interval=timedelta(1))
@@ -69,4 +71,3 @@ t3 = BashOperator(
 
 t2.set_upstream(t1)
 t3.set_upstream(t1)
-
