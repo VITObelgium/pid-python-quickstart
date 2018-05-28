@@ -2,6 +2,7 @@
 Code that goes along with the Airflow located at:
 http://airflow.readthedocs.org/en/latest/tutorial.html
 """
+
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
@@ -9,7 +10,8 @@ from datetime import datetime, timedelta
 from pidclient import logging_factory
 from pidclient.airflow_utils import DAGWithLogging
 from airflow.utils.decorators import apply_defaults
-from pidclient.airflow_utils import log_driver, log_steps 
+from pidclient.airflow_utils import log_workflow, log_operators 
+from pidclient.logging_factory import LoggingFactory
 import types
 
 default_args = {
@@ -62,12 +64,28 @@ t3 = BashOperator(
 t2.set_upstream(t1)
 t3.set_upstream(t1)
 
-def print_driver(self, process_log):
-    process_log.pid_entry.job_desc="Airflow Workflow Adapted"
-    return None
+def init_operator(self, info):
+    return LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
 
-def print_steps(self, process_log):
-    process_log.pid_entry.job_desc="Airflow Step adapted"
-    return None
+def start_operator(self, process_log, context=None):
+    process_log.pid_entry.job_desc="Airflow operator adapted"
+    process_log.proc_started()
+    return process_log
 
-log_steps(log_driver(dag,print_driver,print_driver),print_steps,print_steps)
+def stop_operator(self, process_log,context=None, result=None):
+    process_log.proc_stopped(0,"operator is ok")
+
+
+def init_workflow(self, info):
+    return LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
+
+def start_workflow(self, process_log):
+    process_log.pid_entry.job_desc="Airflow workflow adapted"
+    process_log.proc_started()
+    return process_log
+
+def stop_workflow(self, process_log):
+    process_log.proc_stopped(0,"workflow is ok")
+
+log_workflow(dag,init_workflow,start_workflow,stop_workflow)
+log_operators(dag,init_operator,start_operator,stop_operator)
