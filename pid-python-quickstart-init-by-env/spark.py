@@ -16,7 +16,7 @@ to be executed in parallel.
 """
 if __name__ == '__main__':
     """
-    Initialize the logging system ( which is by default a simple console logger ) and flush the initial log
+    Initialize the logging system ( with environment definitions ) and flush the initial log
     """
     process_log = logging_factory.LoggingFactory().get_logger("-","HISTOGRAM",datetime.now())
     process_log.proc_started()
