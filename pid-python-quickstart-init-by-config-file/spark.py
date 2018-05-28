@@ -18,7 +18,7 @@ if __name__ == '__main__':
     """
     Initialize the logging system ( which is by default a simple console logger ) and flush the initial log
     """
-    process_log = logging_factory.LoggingFactory().get_logger("-","HISTOGRAM",datetime.now())
+    process_log = logging_factory.LoggingFactory(pidconfigpath="pidlogging.conf").get_logger("-","HISTOGRAM",datetime.now())
     process_log.proc_started()
     
     """
