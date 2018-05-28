@@ -2,6 +2,7 @@
 Code that goes along with the Airflow located at:
 http://airflow.readthedocs.org/en/latest/tutorial.html
 """
+
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
@@ -9,6 +10,7 @@ from datetime import datetime, timedelta
 from pidclient import logging_factory
 from pidclient.airflow_utils import DAGWithLogging
 from airflow.utils.decorators import apply_defaults
+from pidclient.logging_factory import LoggingFactory
 import types
 
 default_args = {
@@ -31,14 +33,31 @@ def print_world():
     
     
 class DAGWithExtLogging(DAGWithLogging):
-    def proc_started(self, process_log):
-        process_log.pid_entry.job_desc="Airflow process Adapted"
-        return None
+    
+    def init_operator(self, info):
+        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
+        return process_log
+    
+    def on_start_operator(self, process_log, context=None):
+        process_log.pid_entry.job_desc="Airflow operator adapted"
+        process_log.proc_started()
+        return process_log
+        
+    def on_stop_operator(self, process_log, context=None, result=None):
+        process_log.proc_stopped(0,"operator is ok")
+    
+    def init_workflow(self, info):
+        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
+        return process_log
+    
+    def on_start_workflow(self, process_log, context=None):
+        process_log.pid_entry.job_desc="Airflow workflow adapted"
+        process_log.proc_started()
+        return process_log
         
         
-    def proc_stopped(self, process_log):
-        process_log.pid_entry.job_type="airflow"
-        return None
+    def on_stop_workflow(self, process_log, context=None, result=None):
+        process_log.proc_stopped(0,"workflow is ok")
         
 dag = DAGWithExtLogging(
     'tutorial_with_class', default_args=default_args, schedule_interval=timedelta(1))
@@ -71,3 +90,5 @@ t3 = BashOperator(
 
 t2.set_upstream(t1)
 t3.set_upstream(t1)
+
+dag.log_operator(dag) 
