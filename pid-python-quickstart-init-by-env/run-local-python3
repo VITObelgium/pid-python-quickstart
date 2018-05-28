@@ -1,3 +1,7 @@
 #!/bin/sh
+
+export PIDCLIENT_LOGGERS=kafka
+export PIDCLIENT_KAFKA_TOPIC=pid_test2_es
+export PIDCLIENT_KAFKA_BROKERS=epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668
 python3.5 spark.py
 

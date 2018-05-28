@@ -11,13 +11,13 @@ In this example, additional information has been added to give information on ho
 ## generalities
 The following environment variables can be used as directive for the Processing Information DataStore facility :
 
-	pidclient.main.logger=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
-	pidclient.kafka.brokers=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
-	pidclient.kafka.topic= <kafka topic queue to use>
-	pidclient.file.filename = <list of comma separated filenames to use for logging>	
-	pidclient.elasticsearch.hosts =<list of comma separated urls of elasticsearch servers>
-	pidclient.elasticsearch.index = <elasticsearch index to use>
-	pidclient.elasticsearch.type = <elasticsearch type to use>
+	PIDCLIENT_LOGGERS=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
+	PIDCLIENT_KAFKA_BROKERS=<list of comma separated logging facilities to use amongst kafka, file, console and elasticsearch >
+	PIDCLIENT_KAFKA_TOPIC= <kafka topic queue to use>
+	PIDCLIENT_FILE_FILENAME = <list of comma separated filenames to use for logging>	
+	PIDCLIENT_ELASTICSEARCH_HOSTS =<list of comma separated urls of elasticsearch servers>
+	PIDCLIENT_ELASTICSEARCH_INDEX = <elasticsearch index to use>
+	PIDCLIENT_ELASTICSEARCH_TYPE = <elasticsearch type to use>
 	
 Nevertheless, for system architecture reason, they can not be simply set through the use of regular bash instruction such as 
 
@@ -27,15 +27,15 @@ they have to be set as configuration directive of the spark-submit command
 
 
 ## run-local
-In order to fix the environment variables required to fix the DataStore facility to use, on have to use the following directive of the spark-submit command :
+In order to fix the environment variables required to fix the DataStore facility to use, one has to use the classical BASH export instruction before executing the spark-submit command :
 
-	--conf spark.yarn.executorEnv.<env variable>=<value>
+	export <env variable>=<value>
 
 Example :
 
-	--conf spark.yarn.executorEnv.pidclient.main.logger=kafka 
-	--conf spark.yarn.executorEnv.pidclient.kafka.topic=pid_test2_es 
-	--conf spark.yarn.executorEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"  
+	export PIDCLIENT_LOGGERS=kafka
+	export PIDCLIENT_KAFKA_TOPIC=pid_test2_es
+	export PIDCLIENT_KAFKA_BROKERS=epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668 
 
 ## run-cluster
 In order to fix the environment variables required to fix the DataStore facility to use, on have to use the following directive of the spark-submit commands :
