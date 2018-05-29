@@ -44,7 +44,12 @@ class DAGWithExtLogging(DAGWithLogging):
         return process_log
         
     def on_stop_operator(self, process_log, context=None, result=None):
-        process_log.proc_stopped(0,"operator is ok")
+        if result is None:
+            process_log.proc_stopped(0,"operator is ok")
+        elif hasattr(result, 'message'):
+            process_log.proc_stopped(-1,result.message)
+        else:
+            process_log.proc_stopped(-1,str(result))
     
     def init_workflow(self, info):
         process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
@@ -57,7 +62,12 @@ class DAGWithExtLogging(DAGWithLogging):
         
         
     def on_stop_workflow(self, process_log, context=None, result=None):
-        process_log.proc_stopped(0,"workflow is ok")
+        if result is None:
+            process_log.proc_stopped(0,"workflow is ok")
+        elif hasattr(result, 'message'):
+            process_log.proc_stopped(-1,result.message)
+        else:
+            process_log.proc_stopped(-1,str(result))
         
 dag = DAGWithExtLogging(
     'tutorial_with_class', default_args=default_args, schedule_interval=timedelta(1))
