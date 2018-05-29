@@ -33,7 +33,7 @@ def print_world():
     print('world')
 
 dag = DAG(
-    'tutorial_with_steps', default_args=default_args, schedule_interval=timedelta(1))
+    'patchtutorial', default_args=default_args, schedule_interval=timedelta(1))
 
 # t1, t2 and t3 are examples of tasks created by instantiating operators
 t1 = PythonOperator(
@@ -64,7 +64,7 @@ t3 = BashOperator(
 t2.set_upstream(t1)
 t3.set_upstream(t1)
 
-def init_operator(self, info):
+def init_operator(self, info, context=None):
     return LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
 
 def start_operator(self, process_log, context=None):
@@ -76,15 +76,15 @@ def stop_operator(self, process_log,context=None, result=None):
     process_log.proc_stopped(0,"operator is ok")
 
 
-def init_workflow(self, info):
+def init_workflow(self, info, context=None):
     return LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
 
-def start_workflow(self, process_log):
+def start_workflow(self, process_log, context=None):
     process_log.pid_entry.job_desc="Airflow workflow adapted"
     process_log.proc_started()
     return process_log
 
-def stop_workflow(self, process_log):
+def stop_workflow(self, process_log, context=None, result=None):
     process_log.proc_stopped(0,"workflow is ok")
 
 log_workflow(dag,init_workflow,start_workflow,stop_workflow)
