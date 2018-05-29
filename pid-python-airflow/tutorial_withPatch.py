@@ -22,7 +22,7 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5),
+    'retry_delay': timedelta(minutes=1),
     # 'queue': 'bash_queue',
     # 'pool': 'backfill',
     # 'priority_weight': 10,
@@ -33,7 +33,7 @@ def print_world():
     print('world')
 
 dag = DAG(
-    'patchtutorial', default_args=default_args, schedule_interval=timedelta(1))
+    'tutorial_with_patch', default_args=default_args, schedule_interval=timedelta(1))
 
 # t1, t2 and t3 are examples of tasks created by instantiating operators
 t1 = PythonOperator(
@@ -44,7 +44,7 @@ t1 = PythonOperator(
 t2 = BashOperator(
     task_id='print_env',
     bash_command='/usr/bin/env >/tmp/myenv 2>&1',
-    retries=3,
+    retries=1,
     dag=dag)
 
 templated_command = """
