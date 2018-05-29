@@ -34,7 +34,7 @@ def print_world():
     
 class DAGWithExtLogging(DAGWithLogging):
     
-    def init_operator(self, info):
+    def init_operator(self, info, context=None):
         process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
         return process_log
     
@@ -47,11 +47,11 @@ class DAGWithExtLogging(DAGWithLogging):
         if result is None:
             process_log.proc_stopped(0,"operator is ok")
         elif hasattr(result, 'message'):
-            process_log.proc_stopped(-1,result.message)
+            process_log.proc_stopped(-1,str(result.message))
         else:
             process_log.proc_stopped(-1,str(result))
     
-    def init_workflow(self, info):
+    def init_workflow(self, info, context=None):
         process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
         return process_log
     
@@ -65,7 +65,7 @@ class DAGWithExtLogging(DAGWithLogging):
         if result is None:
             process_log.proc_stopped(0,"workflow is ok")
         elif hasattr(result, 'message'):
-            process_log.proc_stopped(-1,result.message)
+            process_log.proc_stopped(-1,str(result.message))
         else:
             process_log.proc_stopped(-1,str(result))
         
