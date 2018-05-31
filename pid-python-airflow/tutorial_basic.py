@@ -125,7 +125,7 @@ class DAGWithExtLogging(DAGWithLogging):
         """
         if process_log is not None:
             if received_exception is None:
-                process_log.proc_stopped(1, "Worflow ends with an issue")
+                process_log.proc_stopped(1, "Operator ends with an issue")
             elif hasattr(received_exception,'retry') and received_exception.retry:
                 process_log.proc_stopped(-1, str(received_exception))
             else:
