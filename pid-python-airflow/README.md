@@ -8,8 +8,8 @@ The following import must be added in the initial program :
 
 	from pidclient.airflow_utils import DAGWithLogging
 	
-This shall provide a new DAGWithLogging class usable as airflow dag definition.  
-Nevertheless, in order to be useful as a logging facility, that new class should be extended with 2 groups of 4 methods whose aim is to indicate how to complete process log information :
+This shall provide a new DAGWithLogging class that can be used as airflow dag definition.  
+Nevertheless, in order to be useful as a logging facility, that new class should be extended with 2 groups of 4 methods whose aim is to indicate how to fill in the process log information :
 
 	init_operator(self, info, context=None)
 	on_start_operator(self, process_log, context=None)
@@ -21,14 +21,13 @@ Nevertheless, in order to be useful as a logging facility, that new class should
 	on_workflow_success(self, process_log, context=None, result=None)
 	on_workflow_failure(self, process_log, context=None, received_exception=None)
 
-The first group deals with operator logging.  The associated methods should be extended only if the user wish to log operation results.  The Second group deals with global workflow logging. 
+The first group deals with operator logging.  The associated methods should be extended only if the user wish to log detailed operation results.  The Second group deals with the global workflow logging. 
 
 The aim of 
-- the init_* methods is to create a process_log entry from the logging factory, and this according certain configuration parameter.  It is mandatory for such methods to return a process_log entry.
-- The on_start_* methods is to indicate to the logging facility that it should start logging information on the process at this point.
-- the on_*_success is to provided to the user the result of the call ( if any ) and to let the user log the result ( or any information ) on the step.
-- the on_*_failure is to indicate to the user that the call has failed and so that he can log that fact to the logging facility.
-
+- the init_* methods is to create a process_log entry from the logging factory, and this according configuration parameter that are provided in the given method.  It is mandatory for such methods to return the build process_log entry.
+- The on_start_* methods is to indicate to the logging facility that it should start logging information on the process at this point. 
+- the on_*_success is to provided to the user the result of the call ( if any ) and to let the user log the result ( or any information ) of the step.
+- the on_*_failure is to indicate to the user that the call has failed and so that he can log that fact to the Processing Information DataStore facility.  For the workflows, any exception could be received by the method ( depending on the situation ).  For the operators, only the AirflowOperatorIssue exception can be gotten.  That exception has a standard message ( message field ) and the boolean "retry" field, that is set to True if the operator shall be reexecuted in a next time.
 
 Example :
 
@@ -62,9 +61,26 @@ Example :
 	dag = DAGWithExtLogging('basic_tutorial', default_args=default_args, schedule_interval=timedelta(1))
     
 
-If one wish to log the operator results, it is mandatory to place 
+If one wish to log the operator results, it is mandatory to place the instruction
 
 	dag.log_operator(dag) 
 
 as very last line of the dag definition.  That instruction shall indeed adapt the different operators so that they make use of the operator group of methods.
-  
+
+# Spark Support
+
+When operator are logged ( through the use of log_operator ), the environment variable 
+	
+	PIDCLIENT_PARENTID
+	
+is automatically made available to the function/methods called by the Operator ( python, Bash, .. ).  That variable is initialized with the uniq id of the present activity( as logged in the Processing Information DataStore facility ).
+
+When spark cluster and spark local are executed through airflow, they shall automatically pick up the information present in that variable and insert it in the 'parent_id' field of the processing log so that a link is created between the 2 framework ( airflow - spark ).
+
+Considering that the spark process shall be launched through the use of the bashOperator with the adequate bash arguments, the follwoing adaptation of the starting scripts should be performed :
+
+- For the client mode of spark : nothing has to be done.  The exported variable shall be available to the framework automatically
+- For the cluster mode of spark : the starting script shall have to be adapted by providing the following arguments to spark-submit :
+
+	--conf spark.executorEnv.PIDCLIENT_PARENTID=${PIDCLIENT_PARENTID} --conf spark.yarn.appMasterEnv.PIDCLIENT_PARENTID=${PIDCLIENT_PARENTID} 
+	
