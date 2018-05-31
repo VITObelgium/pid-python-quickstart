@@ -1,46 +1,70 @@
-In order to use the Processing Information DataStore facility for airflow, the dag definition should be replaced by one that extends the DAGWithLogging class (from pidclient.airflow_utils).  
+In order to use the Processing Information DataStore facility for airflow, the dag definition should point to a dag that extends the DAGWithLogging class (from pidclient.airflow_utils).  
 
 The next section gives details on the approach.  It shall only address the specificities of the airflow system.  Please, refer to the previous examples pid-python-quickstart-* for the usage of the process_log object.
 
 # Extension of DAGWithLogging
 
-The following import must be added in the initial program.
+The following import must be added in the initial program :
 
 	from pidclient.airflow_utils import DAGWithLogging
 	
-This shall make a new DAGWithLogging class available to the airflow dag definition.  That class should be extended with 3 methods that indicate how to complete process log information :
+This shall provide a new DAGWithLogging class usable as airflow dag definition.  
+Nevertheless, in order to be useful as a logging facility, that new class should be extended with 2 groups of 4 methods whose aim is to indicate how to complete process log information :
 
-	def init_operator(self, info, context=None)
-	def on_start_operator(self, process_log, context=None)
-	def on_stop_operator(self, process_log, context=None, result=None)
+	init_operator(self, info, context=None)
+	on_start_operator(self, process_log, context=None)
+	on_operator_success(self, process_log, context=None, result=None)
+	on_operator_failure(self, process_log, context=None, received_exception=None)
 
-Each of the 3 methods receives a persisted process_log information that can be adapted by the user according the needs.  Those methods can return None, or a new process_log information depending on the needs.  This can be usefull to create a new process_log object within the proc-started method if the one provided doesn't fill the needs (due to an incorrect/incomplete created logging DataStore facility for example).
+	init_workflow(self, info, context=None)
+	on_start_workflow(self, process_log, context=None)
+	on_workflow_success(self, process_log, context=None, result=None)
+	on_workflow_failure(self, process_log, context=None, received_exception=None)
+
+The first group deals with operator logging.  The associated methods should be extended only if the user wish to log operation results.  The Second group deals with global workflow logging. 
+
+The aim of 
+- the init_* methods is to create a process_log entry from the logging factory, and this according certain configuration parameter.  It is mandatory for such methods to return a process_log entry.
+- The on_start_* methods is to indicate to the logging facility that it should start logging information on the process at this point.
+- the on_*_success is to provided to the user the result of the call ( if any ) and to let the user log the result ( or any information ) on the step.
+- the on_*_failure is to indicate to the user that the call has failed and so that he can log that fact to the logging facility.
+
 
 Example :
 
 	class DAGWithExtLogging(DAGWithLogging):
-	    def init_operator(self, info, context=None):
-	        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
-	        return process_log
-	    
-	    def on_start_operator(self, process_log, context=None):
-	        process_log.pid_entry.job_desc="Airflow operator adapted"
-	        process_log.proc_started()
-	        return process_log
-	        
-	    def on_stop_operator(self, process_log, context=None, result=None):
-	        if result is None:
-	            process_log.proc_stopped(0,"operator is ok")
-	        elif hasattr(result, 'message'):
-	            process_log.proc_stopped(-1,str(result.message))
-	        else:
-	            process_log.proc_stopped(-1,str(result))
+    def init_workflow(self, info, context=None):
+        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
+        return process_log
+        
+    def on_start_workflow(self, process_log, context=None):
+        if process_log is not None:
+            process_log.proc_started()
 
-That new class can then be used to declare the dag.
+    def on_workflow_success(self, process_log, context=None, result=None):
+        if process_log is not None:
+            if result is None:
+                process_log.proc_stopped(0,"")
+            else:
+                process_log.proc_stopped(0, str(result))
+
+    def on_workflow_failure(self, process_log, context=None, received_exception=None):
+        if process_log is not None:
+            if received_exception is None:
+                process_log.proc_stopped(-1,"Worflow ends with an issue")
+            else:
+                process_log.proc_stopped(-1, str(received_exception))
+
+That new class can then be used in the dag definition.
 
 Example :
 
-	dag = DAGWithExtLogging('tutorial_with_class', default_args=default_args, schedule_interval=timedelta(1))
+	dag = DAGWithExtLogging('basic_tutorial', default_args=default_args, schedule_interval=timedelta(1))
     
 
+If one wish to log the operator results, it is mandatory to place 
+
+	dag.log_operator(dag) 
+
+as very last line of the dag definition.  That instruction shall indeed adapt the different operators so that they make use of the operator group of methods.
   
