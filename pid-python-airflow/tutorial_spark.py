@@ -125,9 +125,11 @@ class DAGWithExtLogging(DAGWithLogging):
         """
         if process_log is not None:
             if received_exception is None:
-                process_log.proc_stopped(0,"Operator ends with an issue")
+                process_log.proc_stopped(1, "operator ends with an issue")
+            elif hasattr(received_exception,'retry') and received_exception.retry:
+                process_log.proc_stopped(-1, str(received_exception))
             else:
-                process_log.proc_stopped(0, str(received_exception))
+                process_log.proc_stopped(2, str(received_exception))
         
 dag = DAGWithExtLogging(
     'pid_tutorial_spark', default_args=default_args, schedule_interval=timedelta(1))
