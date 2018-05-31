@@ -5,6 +5,7 @@ Four cases of logging shall be covered :
 - Logging with specific logging directive provided in the python code
 - Logging with specific logging directive provided in a configuration file
 - Logging with specific logging directive provided in the operating system's environment
+- Logging within an airflow environment
 
 The original documentation on how to run the code is still applicable, and reminded here for covenience.
 
