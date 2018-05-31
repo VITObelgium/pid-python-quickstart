@@ -65,7 +65,7 @@ class DAGWithExtLogging(DAGWithLogging):
         """
         if process_log is not None:
             if result is None:
-                process_log.proc_stopped(0,"")
+                process_log.proc_stopped(0,None)
             else:
                 process_log.proc_stopped(0, str(result))
 
@@ -112,7 +112,7 @@ class DAGWithExtLogging(DAGWithLogging):
         """
         if process_log is not None:
             if result is None:
-                process_log.proc_stopped(0,"")
+                process_log.proc_stopped(0,None)
             else:
                 process_log.proc_stopped(0,str(result))
 
