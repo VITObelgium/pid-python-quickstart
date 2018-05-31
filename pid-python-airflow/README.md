@@ -32,27 +32,54 @@ The aim of
 Example :
 
 	class DAGWithExtLogging(DAGWithLogging):
-    def init_workflow(self, info, context=None):
-        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
-        return process_log
-        
-    def on_start_workflow(self, process_log, context=None):
-        if process_log is not None:
-            process_log.proc_started()
+	
+	    def init_workflow(self, info, context=None):
+	        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
+	        return process_log
+	        
+	    def on_start_workflow(self, process_log, context=None):
+	        if process_log is not None:
+	            process_log.proc_started()
+	
+	    def on_workflow_success(self, process_log, context=None, result=None):
+	        if process_log is not None:
+	            if result is None:
+	                process_log.proc_stopped(0,"")
+	            else:
+	                process_log.proc_stopped(0, str(result))
+	
+	    def on_workflow_failure(self, process_log, context=None, received_exception=None):
+	        if process_log is not None:
+	            if received_exception is None:
+	                process_log.proc_stopped(-1,"Worflow ends with an issue")
+	            else:
+	                process_log.proc_stopped(-1, str(received_exception))
 
-    def on_workflow_success(self, process_log, context=None, result=None):
-        if process_log is not None:
-            if result is None:
-                process_log.proc_stopped(0,"")
-            else:
-                process_log.proc_stopped(0, str(result))
 
-    def on_workflow_failure(self, process_log, context=None, received_exception=None):
-        if process_log is not None:
-            if received_exception is None:
-                process_log.proc_stopped(-1,"Worflow ends with an issue")
-            else:
-                process_log.proc_stopped(-1, str(received_exception))
+	    def init_operator(self, info, context=None):
+	        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
+	        return process_log
+	        
+	    def on_start_operator(self, process_log, context=None):
+	        if process_log is not None:
+	            process_log.proc_started()
+	        return process_log
+	
+	    def on_operator_success(self, process_log, context=None, result=None):
+	        if process_log is not None:
+	            if result is None:
+	                process_log.proc_stopped(0,None)
+	            else:
+	                process_log.proc_stopped(0,str(result))
+	
+	    def on_operator_failure(self, process_log, context=None, received_exception=None):
+	        if process_log is not None:
+	            if received_exception is None:
+	                process_log.proc_stopped(1, "Operator ends with an issue")
+	            elif hasattr(received_exception,'retry') and received_exception.retry:
+	                process_log.proc_stopped(-1, str(received_exception))
+	            else:
+	                process_log.proc_stopped(2, str(received_exception))
 
 That new class can then be used in the dag definition.
 
