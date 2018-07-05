@@ -36,7 +36,7 @@ def print_world():
 class DAGWithExtLogging(DAGWithLogging):
     
     def init_workflow(self, info, context=None):
-        """initiliase the logging factory ( before the workflow is
+        """initialize the logging factory ( before the workflow is
         executed )
 
         :param process_log: the process log
@@ -53,6 +53,7 @@ class DAGWithExtLogging(DAGWithLogging):
         :type process_log: ProcessLog
         """
         if process_log is not None:
+            process_log.fix_trace()          
             process_log.proc_started()
         return process_log
 
@@ -65,7 +66,7 @@ class DAGWithExtLogging(DAGWithLogging):
         """
         if process_log is not None:
             if result is None:
-                process_log.proc_stopped(0,None)
+                process_log.proc_stopped(0,"")
             else:
                 process_log.proc_stopped(0, str(result))
 
@@ -83,7 +84,7 @@ class DAGWithExtLogging(DAGWithLogging):
                 process_log.proc_stopped(-1, str(received_exception))
 
     def init_operator(self, info, context=None):
-        """initiliase the logging factory ( before the operator is
+        """initialize the logging factory ( before the operator is
         executed 
 
         :param process_log: the process log
@@ -100,6 +101,7 @@ class DAGWithExtLogging(DAGWithLogging):
         :type process_log: ProcessLog
         """
         if process_log is not None:
+            process_log.fix_trace() 
             process_log.proc_started()
         return process_log
 
@@ -112,7 +114,7 @@ class DAGWithExtLogging(DAGWithLogging):
         """
         if process_log is not None:
             if result is None:
-                process_log.proc_stopped(0,None)
+                process_log.proc_stopped(0,"")
             else:
                 process_log.proc_stopped(0,str(result))
 
@@ -125,7 +127,7 @@ class DAGWithExtLogging(DAGWithLogging):
         """
         if process_log is not None:
             if received_exception is None:
-                process_log.proc_stopped(1, "Operator ends with an issue")
+                process_log.proc_stopped(1, "Worflow ends with an issue")
             elif hasattr(received_exception,'retry') and received_exception.retry:
                 process_log.proc_stopped(-1, str(received_exception))
             else:
