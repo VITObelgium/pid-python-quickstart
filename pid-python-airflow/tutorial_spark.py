@@ -34,15 +34,17 @@ def print_world():
     
     
 class DAGWithExtLogging(DAGWithLogging):
-    
+    def get_environment(self, env_type):
+        return {"PIDCLIENT_LOGGERS" : "kafka,console", "PIDCLIENT_KAFKA_TOPIC" : "pid_test2_es","PIDCLIENT_KAFKA_ES_INDEX" : "pid_test2_es", "PIDCLIENT_KAFKA_BROKERS" : "epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"}
+
     def init_workflow(self, info, context=None):
-        """initiliase the logging factory ( before the workflow is
+        """initialize the logging factory ( before the workflow is
         executed )
 
         :param process_log: the process log
         :type process_log: ProcessLog
         """
-        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
+        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW2", datetime.now())
         return process_log
         
     def on_start_workflow(self, process_log, context=None):
@@ -53,6 +55,7 @@ class DAGWithExtLogging(DAGWithLogging):
         :type process_log: ProcessLog
         """
         if process_log is not None:
+            process_log.fix_trace()
             process_log.proc_started()
         return process_log
 
@@ -78,18 +81,18 @@ class DAGWithExtLogging(DAGWithLogging):
         """
         if process_log is not None:
             if received_exception is None:
-                process_log.proc_stopped(-1,"Worflow ends with an issue")
+                process_log.proc_stopped(1,"Worflow ends with an issue")
             else:
-                process_log.proc_stopped(-1, str(received_exception))
+                process_log.proc_stopped(1, str(received_exception))
 
     def init_operator(self, info, context=None):
-        """initiliase the logging factory ( before the operator is
+        """initialize the logging factory ( before the operator is
         executed 
 
         :param process_log: the process log
         :type process_log: ProcessLog
         """
-        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW", datetime.now())
+        process_log = LoggingFactory(sysinfo=info).get_logger("-", "AIRFLOW2", datetime.now())
         return process_log
         
     def on_start_operator(self, process_log, context=None):
@@ -100,6 +103,7 @@ class DAGWithExtLogging(DAGWithLogging):
         :type process_log: ProcessLog
         """
         if process_log is not None:
+            process_log.fix_trace()
             process_log.proc_started()
         return process_log
 
@@ -130,6 +134,7 @@ class DAGWithExtLogging(DAGWithLogging):
                 process_log.proc_stopped(-1, str(received_exception))
             else:
                 process_log.proc_stopped(2, str(received_exception))
+
         
 dag = DAGWithExtLogging(
     'pid_tutorial_spark', default_args=default_args, schedule_interval=timedelta(1))
