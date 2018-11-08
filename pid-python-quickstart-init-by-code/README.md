@@ -38,7 +38,7 @@ The program should end with
 
 	process_log.proc_stopped(<exit code>,"<exit message>")
 	
-that should ideally placed in a 'finally' statement.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
+that should ideally placed in a 'finally' statement and before the halt of the spark context.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
 
 
 

@@ -44,11 +44,11 @@ The following import must be added in the initial program.
 	
 As very first lines of the code, the following code should be inserted :
 
-	process_log = logging_factory.LoggingFactory(pidconfigpath="/data/users/Private/MyOwnUSER/pid.conf").get_logger("<product_id>","<product_type>","<product_date>")
+	process_log = logging_factory.LoggingFactory(pidclient_configuration_path="/data/users/Private/MyOwnUSER/pid.conf").get_logger("<product_id>","<product_type>","<product_date>")
     process_log.proc_started()
 
 The first line initializes the system and indicates that a product of type 
-<product_type> with the reference <product_id> and the creation date <product_date> shall be created.  The specific logging directive is provided through the use of the pidconfigpath parameter with the configuration filename as arguement.  It is also possible to set up a pidclient.pidconfigpath environment variable instead of using an instruction parameter. 
+<product_type> with the reference <product_id> and the creation date <product_date> shall be created.  The specific logging directive is provided through the use of the pidclient_configuration_path parameter with the configuration filename as argument.  It is also possible to set up a PIDCLIENT_CONFIGURATION_PATH environment variable instead of using an instruction parameter. 
 
 The second line asks to register the initial information in the DataStore facility.
 Specific logging information can be added between those 2 lines, by adapting the content of the process_log object.
@@ -57,7 +57,7 @@ The program should end with
 
 	process_log.proc_stopped(<exit code>,"<exit message>")
 	
-that should ideally placed in a 'finally' statement.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
+that should ideally placed in a 'finally' statement and before the halt of the spark context.  It shall log the exit code and, the exit message and close the communication layer to the DataStore facility.
 
 
 
