@@ -10,7 +10,7 @@ def histogram(image_info):
     """
     Initialize the logging system ( which is by default a simple console logger ) and flush the initial log
     """
-    process_log = logging_factory.LoggingFactory(pidconfigpath="../pidlogging.conf").get_logger("-","HISTOGRAM",datetime.datetime.now())
+    process_log = logging_factory.LoggingFactory(pidclient_configuration_path="../pidlogging.conf").get_logger("-","HISTOGRAM",datetime.datetime.now())
     process_log.add_file(str(image_info['file']),'input','eoproduct',str(image_info['geometry'])).proc_started()
 
     image_file = image_info['file']
