@@ -34,8 +34,8 @@ In order to fix the environment variables required to fix the DataStore facility
 Example :
 
 	export PIDCLIENT_LOGGERS=kafka
-	export PIDCLIENT_KAFKA_TOPIC=pid_test2_es
-	export PIDCLIENT_KAFKA_BROKERS=epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668 
+	export PIDCLIENT_KAFKA_TOPIC=pid_2_es
+	export PIDCLIENT_KAFKA_BROKERS=epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668
 
 ## run-cluster
 In order to fix the environment variables required to fix the DataStore facility to use, on have to use the following directive of the spark-submit commands :
