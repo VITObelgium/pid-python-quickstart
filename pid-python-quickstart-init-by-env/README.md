@@ -46,10 +46,10 @@ In order to fix the environment variables required to fix the DataStore facility
 Example :
 
 	--conf spark.executorEnv.pidclient.main.logger=kafka 
-	--conf spark.executorEnv.pidclient.kafka.topic=pid_test2_es --conf spark.executorEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668" 
+	--conf spark.executorEnv.pidclient.kafka.topic=pid_2_es --conf spark.executorEnv.pidclient.kafka.brokers="epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668" 
 	--conf spark.yarn.appMasterEnv.pidclient.main.logger=kafka 
-	--conf spark.yarn.appMasterEnv.pidclient.kafka.topic=pid_test2_es 
-	--conf spark.yarn.appMasterEnv.pidclient.kafka.brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"
+	--conf spark.yarn.appMasterEnv.pidclient.kafka.topic=pid_2_es 
+	--conf spark.yarn.appMasterEnv.pidclient.kafka.brokers="epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668"
 
 
 # Required code adaptation
