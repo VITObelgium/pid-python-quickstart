@@ -27,8 +27,8 @@ Example : file /data/users/Private/MyOwnUSER/pid.conf
 	[main]
 	loggers=kafka,console,file,elasticsearch
 	[kafka]	
-	brokers=epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668
-	topic=pid_test2_es
+	brokers=epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668
+	topic=pid_2_es
 	[file]
 	filename = /tmp/mainfile.log,/tmp/fallback.log
 	[elasticsearch]
