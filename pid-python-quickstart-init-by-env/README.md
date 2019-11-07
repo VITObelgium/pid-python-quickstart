@@ -35,7 +35,6 @@ Example :
 
 	export PIDCLIENT_LOGGERS=kafka
 	export PIDCLIENT_KAFKA_TOPIC=pid_2_es
-	export PIDCLIENT_KAFKA_BROKERS=epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668
 
 ## run-cluster
 In order to fix the environment variables required to fix the DataStore facility to use, on have to use the following directive of the spark-submit commands :
@@ -46,10 +45,9 @@ In order to fix the environment variables required to fix the DataStore facility
 Example :
 
 	--conf spark.executorEnv.pidclient.main.logger=kafka 
-	--conf spark.executorEnv.pidclient.kafka.topic=pid_2_es --conf spark.executorEnv.pidclient.kafka.brokers="epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668" 
+	--conf spark.executorEnv.pidclient.kafka.topic=pid_2_es 
 	--conf spark.yarn.appMasterEnv.pidclient.main.logger=kafka 
 	--conf spark.yarn.appMasterEnv.pidclient.kafka.topic=pid_2_es 
-	--conf spark.yarn.appMasterEnv.pidclient.kafka.brokers="epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668"
 
 
 # Required code adaptation

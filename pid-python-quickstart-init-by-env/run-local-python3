@@ -2,6 +2,4 @@
 
 export PIDCLIENT_LOGGERS=kafka
 export PIDCLIENT_KAFKA_TOPIC=pid_2_es
-export PIDCLIENT_KAFKA_BROKERS=epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668
 python3.5 spark.py
-

@@ -11,6 +11,6 @@ spark-submit --master yarn-cluster \
 --conf spark.shuffle.service.enabled=true --conf spark.dynamicAllocation.enabled=true \
 --conf spark.yarn.appMasterEnv.SPARK_HOME=/usr/hdp/current/spark2-client \
 --conf spark.yarn.appMasterEnv.PYSPARK_DRIVER_PYTHON=/usr/bin/python3.5 --conf spark.executorEnv.PYSPARK_PYTHON=/usr/bin/python3.5 \
---conf spark.executorEnv.PIDCLIENT_LOGGERS=kafka --conf spark.executorEnv.PIDCLIENT_KAFKA_TOPIC=pid_2_es --conf spark.executorEnv.PIDCLIENT_KAFKA_BROKERS="epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668"  \
---conf spark.yarn.appMasterEnv.PIDCLIENT_LOGGERS=kafka --conf spark.yarn.appMasterEnv.PIDCLIENT_KAFKA_TOPIC=pid_2_es --conf spark.yarn.appMasterEnv.PIDCLIENT_KAFKA_BROKERS="epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668"  \
+--conf spark.executorEnv.PIDCLIENT_LOGGERS=kafka --conf spark.executorEnv.PIDCLIENT_KAFKA_TOPIC=pid_2_es \
+--conf spark.yarn.appMasterEnv.PIDCLIENT_LOGGERS=kafka --conf spark.yarn.appMasterEnv.PIDCLIENT_KAFKA_TOPIC=pid_2_es \
 --files log4j.properties --py-files histogram.zip spark.py
