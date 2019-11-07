@@ -10,7 +10,7 @@ def histogram(image_info):
     """
     Initialize the logging system with kafka configuration and flush the initial log
     """
-    kafka_system=KafkaLogging(brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668",topic='pid_test2_es' )
+    kafka_system=KafkaLogging(brokers="epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668",topic='pid_2_es' )
     process_log = logging_factory.LoggingFactory(classes=[kafka_system]).get_logger("-","HISTOGRAM",datetime.datetime.now())
     process_log.add_file(str(image_info['file']),'input','eoproduct',str(image_info['geometry'])).proc_started()
 

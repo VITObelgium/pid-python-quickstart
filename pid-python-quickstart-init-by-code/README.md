@@ -19,7 +19,7 @@ The following other imports can also be used :
 
 As very first lines of the code, the following code should be inserted :
 
-	kafka_system=KafkaLogging(brokers="epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668",topic='pid_test2_es' )
+	kafka_system=KafkaLogging(brokers="epod-master1.vgt.vito.be:6668,epod-master2.vgt.vito.be:6668,epod-master3.vgt.vito.be:6668",topic='pid_2_es' )
     process_log = logging_factory.LoggingFactory(classes=[kafka_system]).get_logger("-","HISTOGRAM",datetime.now())
 
 The first line initialize the kafka logging object with the required information. The following other logging system could be used :
