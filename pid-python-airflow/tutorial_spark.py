@@ -35,7 +35,7 @@ def print_world():
     
 class DAGWithExtLogging(DAGWithLogging):
     def get_environment(self, env_type):
-        return {"PIDCLIENT_LOGGERS" : "kafka,console", "PIDCLIENT_KAFKA_TOPIC" : "pid_test2_es","PIDCLIENT_KAFKA_ES_INDEX" : "pid_test2_es", "PIDCLIENT_KAFKA_BROKERS" : "epod1.vgt.vito.be:6668,epod17.vgt.vito.be:6668"}
+        return {"PIDCLIENT_LOGGERS" : "kafka,console", "PIDCLIENT_KAFKA_TOPIC" : "pid_2_es","PIDCLIENT_KAFKA_ES_INDEX" : "pid_2_es"}
 
     def init_workflow(self, info, context=None):
         """initialize the logging factory ( before the workflow is
