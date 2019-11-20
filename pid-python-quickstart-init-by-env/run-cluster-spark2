@@ -4,4 +4,9 @@
 export SPARK_MAJOR_VERSION=2
 export SPARK_HOME=/usr/hdp/current/spark2-client
 zip -r histogram.zip histogram/ && \
-spark-submit --master yarn-cluster --conf spark.shuffle.service.enabled=true --conf spark.dynamicAllocation.enabled=true --conf spark.shuffle.service.enabled=true --conf spark.dynamicAllocation.enabled=true --conf spark.executorEnv.PIDCLIENT_LOGGERS=kafka --conf spark.executorEnv.PIDCLIENT_KAFKA_TOPIC=pid_2_es --conf spark.yarn.appMasterEnv.PIDCLIENT_LOGGERS=kafka --conf spark.yarn.appMasterEnv.PIDCLIENT_KAFKA_TOPIC=pid_2_es --conf spark.yarn.appMasterEnv.SPARK_HOME=/usr/hdp/current/spark2-client --files log4j.properties --py-files histogram.zip spark.py
+spark-submit --master yarn --deploy-mode cluster \
+             --conf spark.shuffle.service.enabled=true --conf spark.dynamicAllocation.enabled=true \
+             --conf spark.executorEnv.PIDCLIENT_LOGGERS=kafka \
+             --conf spark.yarn.appMasterEnv.PIDCLIENT_LOGGERS=kafka \
+             --conf spark.yarn.appMasterEnv.SPARK_HOME=/usr/hdp/current/spark2-client \
+             --files log4j.properties --py-files histogram.zip spark.py
